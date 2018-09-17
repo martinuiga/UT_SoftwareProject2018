@@ -1,0 +1,3 @@
+export {
+	setName
+} from './example'
