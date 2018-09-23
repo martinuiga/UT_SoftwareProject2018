@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Layout from './containers/Layout/Layout'
+import QuestionFormContainer from '../containers/QuestionFormContainer';
 
 class App extends Component {
 	render() {
 		return (
-			<Layout/>
+			<QuestionFormContainer />
 		);
 	}
 }
