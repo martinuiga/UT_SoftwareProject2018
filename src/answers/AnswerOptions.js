@@ -14,7 +14,7 @@ class AnswerOptions extends React.Component {
 
   handleChange = (value) => {
     this.setState({ value });
-  }
+  };
 
   render() {
     return (
