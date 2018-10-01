@@ -1,10 +1,7 @@
 import axios from 'axios';
 
-const QuestionsService = () => {
+export const getQuestions = () => {
   const URL = 'https://blog.kmu.ee/wp-json/wp/v2/questions';
-  const API = axios.get(URL)
-    .then((response) => console.log('RESPONSE', response));
-  return null;
+  return axios.get(URL)
+    .then((response) => response.data);
 };
-
-export default QuestionsService;
