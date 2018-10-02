@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
 import QuestionForm from '../questions/QuestionForm';
-import { getQuestions } from '../api/QuestionsService';
 
-const mapStateToProps = (state) => ({
-  questions: getQuestions()
-});
+const mapStateToProps = (state) => {
+  return {};
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {};
