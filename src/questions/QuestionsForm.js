@@ -2,7 +2,7 @@ import React from 'react';
 import Question from './Question';
 import AnswerOptions from '../answers/AnswerOptions';
 
-class QuestionForm extends React.Component {
+class QuestionsForm extends React.Component {
   // Siia tuleb loogika, mis võtab ühe välja kuvatava küsimuse
   // ja vastavalt tüübile renderdatakse õiged komponendid
   render() {
@@ -17,4 +17,4 @@ class QuestionForm extends React.Component {
   }
 }
 
-export default QuestionForm;
+export default QuestionsForm;
