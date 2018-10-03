@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { MuiThemeProvider } from 'material-ui/styles';
 
-import QuestionFormContainer from '../containers/QuestionFormContainer';
+import QuestionsForm from '../questions/QuestionsForm';
 
 class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
-        <QuestionFormContainer />
+        <QuestionsForm />
       </MuiThemeProvider>
     );
   }
