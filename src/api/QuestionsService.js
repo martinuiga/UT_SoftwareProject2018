@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { merge } from 'ramda';
 
-const structurizeQuestions = (APIresponseData) => {
+export const structurizeQuestions = (APIresponseData) => {
   const questions = [];
   APIresponseData.forEach(question => {
     const questionObject = {
@@ -30,6 +30,7 @@ export const getQuestions = () => {
 
   return axios.get(URL)
     .then((response) => {
+      console.log('RESPONSE', response.data);
       return structurizeQuestions(response.data);
     })
     .catch(err => console.log(err));
