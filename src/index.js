@@ -9,15 +9,15 @@ import registerServiceWorker from './registerServiceWorker';
 import example from './store/reducers/example';
 
 const rootReducer = combineReducers({
-	example: example
+  example: example
 });
 
 const store = createStore(rootReducer);
 
 const app = (
-	<Provider store={store}>
-		<App/>
-	</Provider>
+  <Provider store={store}>
+    <App />
+  </Provider>
 );
 
 ReactDOM.render(app, document.getElementById('root'));
