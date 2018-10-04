@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { merge } from 'ramda';
 
 const structurizeQuestions = (APIresponseData) => {
   const questions = [];
@@ -7,7 +8,7 @@ const structurizeQuestions = (APIresponseData) => {
       question: question.title.rendered,
       type: question.slug
     };
-    let answerChoices;
+    let answerChoices = [];
     switch (questionObject.type) {
       case 'single-select-question':
         answerChoices = question.acf.single_select_choices.split(';');
@@ -18,19 +19,17 @@ const structurizeQuestions = (APIresponseData) => {
       default:
         break;
     }
-    questions.push(questionObject);
+    const finalQuestionObject = merge(questionObject, { answerChoices: answerChoices });
+    questions.push(finalQuestionObject);
   });
-  console.log('QUESTIONS STRUCTURIZED', questions);
   return questions;
 };
 
 export const getQuestions = () => {
   const URL = 'https://blog.kmu.ee/wp-json/wp/v2/questions';
 
-
   return axios.get(URL)
     .then((response) => {
-      console.log('response.data', response.data);
       return structurizeQuestions(response.data);
     })
     .catch(err => console.log(err));
