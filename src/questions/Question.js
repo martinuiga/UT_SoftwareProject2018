@@ -1,11 +1,8 @@
-import React from 'react';
 
-class Question extends React.Component {
-  render() {
-    return (
-      'Example question'
-    );
-  }
-}
+const Question = (props) => {
+  return (
+    props.title
+  );
+};
 
 export default Question;
