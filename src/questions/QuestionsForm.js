@@ -10,14 +10,14 @@ import { getQuestions } from '../api/QuestionsService';
 
 class QuestionsForm extends React.PureComponent {
   constructor(props) {
-    super();
-    this.state = { currentQuestionIndex: 0 };
+    super(props);
+    this.state = { currentQuestionIndex: 2 };
   }
 
   componentWillMount() {
     return getQuestions().then(questions => {
       this.setState(prevState => merge(prevState, {
-        currentQuestion: questions[0]
+        currentQuestion: questions[2]
       }));
     });
   }
@@ -32,12 +32,11 @@ class QuestionsForm extends React.PureComponent {
         />
       ); */
       case 'multiple-select-question':
-        return '';
-      /* return (
-        <MultipleSelect
-          question={question}
-        />
-      ); */
+        return (
+          <MultipleSelect
+            question={question}
+          />
+        );
       case 'short-answer-question':
         return '';
       /* return (
