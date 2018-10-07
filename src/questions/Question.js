@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Subheader } from 'material-ui';
 
 const Question = (props) => {
@@ -7,6 +8,10 @@ const Question = (props) => {
       {props.title}
     </Subheader>
   );
+};
+
+Question.propTypes = {
+  title: PropTypes.string.isRequired
 };
 
 export default Question;
