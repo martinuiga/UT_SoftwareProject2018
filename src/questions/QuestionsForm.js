@@ -1,4 +1,5 @@
 import React from 'react';
+import { Paper } from 'material-ui';
 import { merge } from 'ramda';
 
 import SingleSelect from '../answers/SingleSelect';
@@ -62,7 +63,19 @@ class QuestionsForm extends React.PureComponent {
   }
 
   render() {
-    return this.renderQuestionAndAnswer();
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Paper style={{
+          height: 400,
+          width: 600,
+          margin: 20,
+          textAlign: 'center'
+        }}
+        >
+          {this.renderQuestionAndAnswer()}
+        </Paper>
+      </div>
+    );
   }
 }
 
