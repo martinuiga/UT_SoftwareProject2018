@@ -16,7 +16,6 @@ class MultipleSelect extends React.PureComponent {
   }
 
   handleChange = name => event => {
-    console.log('NAME', name);
     this.setState({ [name]: event.target.checked });
   };
 
