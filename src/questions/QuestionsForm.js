@@ -25,13 +25,13 @@ class QuestionsForm extends React.PureComponent {
   renderCorrectAnswerOptions = (question) => {
     switch (question.type) {
       case 'single-select-question':
-        return '';
-      /* return (
-        <SingleSelect
-          question={question}
-        />
-      ); */
+        return (
+          <SingleSelect
+            question={question}
+          />
+        );
       case 'multiple-select-question':
+
         return (
           <MultipleSelect
             question={question}
