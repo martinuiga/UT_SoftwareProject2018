@@ -17,7 +17,7 @@ class QuestionsForm extends React.PureComponent {
   componentWillMount() {
     return getQuestions().then(questions => {
       this.setState(prevState => merge(prevState, {
-        currentQuestion: questions[2]
+        currentQuestion: questions[1] // Mitmes küsimus võetakse jsonist
       }));
     });
   }
@@ -25,13 +25,13 @@ class QuestionsForm extends React.PureComponent {
   renderCorrectAnswerOptions = (question) => {
     switch (question.type) {
       case 'single-select-question':
-        return '';
-      /* return (
-        <SingleSelect
-          question={question}
-        />
-      ); */
+        return (
+          <SingleSelect
+            question={question}
+          />
+        );
       case 'multiple-select-question':
+
         return (
           <MultipleSelect
             question={question}
