@@ -17,7 +17,7 @@ class QuestionsForm extends React.PureComponent {
   componentWillMount() {
     return getQuestions().then(questions => {
       this.setState(prevState => merge(prevState, {
-        currentQuestion: questions[2]
+        currentQuestion: questions[0]
       }));
     });
   }
@@ -38,12 +38,11 @@ class QuestionsForm extends React.PureComponent {
           />
         );
       case 'short-answer-question':
-        return '';
-      /* return (
-        <ShortAnswer
-          question={question}
-        />
-      ); */
+        return (
+          <ShortAnswer
+            question={question}
+          />
+        );
       default:
         return '';
     }
