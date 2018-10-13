@@ -1,7 +1,5 @@
 import { structurizeQuestions } from '../QuestionsService';
 
-const assert = require('assert');
-
 describe('testing QuestionsService', () => {
   const APIresponseData = [
     {
@@ -24,6 +22,6 @@ describe('testing QuestionsService', () => {
 
   it('data from API structurized correctly', () => {
     const questions = structurizeQuestions(APIresponseData);
-    assert.deepEqual(questions, expected);
+    expect(questions).toEqual(expected);
   });
 });
