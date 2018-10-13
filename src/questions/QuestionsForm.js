@@ -1,26 +1,40 @@
 import React from 'react';
 import { Paper } from 'material-ui';
-import { merge } from 'ramda';
 
 import SingleSelect from '../answers/SingleSelect';
 import MultipleSelect from '../answers/MultipleSelect';
 import ShortAnswer from '../answers/ShortAnswer';
 import Question from './Question';
+import ActionButtons from './ActionButtons';
 import { getQuestions } from '../api/QuestionsService';
 
 class QuestionsForm extends React.PureComponent {
   constructor(props) {
     super(props);
-    this.state = { currentQuestionIndex: 2 };
+    this.state = {
+      currentQuestionIndex: 0,
+      questions: []
+    };
   }
 
   componentWillMount() {
     return getQuestions().then(questions => {
-      this.setState(prevState => merge(prevState, {
-        currentQuestion: questions[0]
-      }));
+      this.setState({ questions });
     });
   }
+
+  changeCurrentQuestionIndex = () => {
+    this.setState((prevState) => {
+      let currentQuestionIndex = prevState.currentQuestionIndex + 1;
+
+      // TODO remove if last page is implemented
+      if (currentQuestionIndex > prevState.questions.length - 1) {
+        currentQuestionIndex = 0;
+      }
+
+      return { currentQuestionIndex };
+    });
+  };
 
   renderCorrectAnswerOptions = (question) => {
     switch (question.type) {
@@ -49,15 +63,26 @@ class QuestionsForm extends React.PureComponent {
   }
 
   renderQuestionAndAnswer = () => {
-    if (this.state.currentQuestion) {
+    const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
+    if (currentQuestion) {
       return (
-        <div style={{ textAlign: 'center' }}>
-          <Question title={this.state.currentQuestion.question} />
-          {this.renderCorrectAnswerOptions(this.state.currentQuestion)}
+        <div style={{ textAlign: 'center', minHeight: '260px' }}>
+          <Question title={currentQuestion.question} />
+          {this.renderCorrectAnswerOptions(currentQuestion)}
         </div>
       );
     }
     return '';
+  }
+
+  renderActionButtons() {
+    if (!this.state.questions[this.state.currentQuestionIndex]) return null;
+
+    return (
+      <ActionButtons
+        changeCurrentQuestionIndex={this.changeCurrentQuestionIndex}
+      />
+    );
   }
 
   render() {
@@ -71,6 +96,7 @@ class QuestionsForm extends React.PureComponent {
         }}
         >
           {this.renderQuestionAndAnswer()}
+          {this.renderActionButtons()}
         </Paper>
       </div>
     );
