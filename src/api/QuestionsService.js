@@ -43,7 +43,6 @@ export const getQuestions = () => {
 
   return axios.get(URL)
     .then((response) => {
-      console.log('RESPONSE', response);
       return structurizeQuestions(response.data);
     })
     .catch(err => console.log(err));
