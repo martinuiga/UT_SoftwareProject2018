@@ -6,8 +6,8 @@ describe('testing QuestionsService', () => {
       title: {
         rendered: 'Kas see test läheb läbi?'
       },
-      slug: 'single-select-question',
       acf: {
+        is_single_select: true,
         single_select_choices: 'jah;ei'
       }
     }
