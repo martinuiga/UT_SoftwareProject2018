@@ -1,12 +1,25 @@
 import axios from 'axios';
 import { merge } from 'ramda';
 
+const getQuestionType = (acf) => {
+  if (acf.is_multiple_select) {
+    return 'multiple-select-question';
+  }
+  if (acf.is_short_answer) {
+    return 'short-answer-question';
+  }
+  if (acf.is_single_select) {
+    return 'single-select-question';
+  }
+  return '';
+};
+
 export const structurizeQuestions = (APIresponseData) => {
   const questions = [];
   APIresponseData.forEach(question => {
     const questionObject = {
       question: question.title.rendered,
-      type: question.slug
+      type: getQuestionType(question.acf)
     };
     let answerChoices = [];
     switch (questionObject.type) {
@@ -26,10 +39,11 @@ export const structurizeQuestions = (APIresponseData) => {
 };
 
 export const getQuestions = () => {
-  const URL = 'https://blog.kmu.ee/wp-json/wp/v2/questions';
+  const URL = 'http://terminoloogia.ee/wp-json/wp/v2/questions';
 
   return axios.get(URL)
     .then((response) => {
+      console.log('RESPONSE', response);
       return structurizeQuestions(response.data);
     })
     .catch(err => console.log(err));
