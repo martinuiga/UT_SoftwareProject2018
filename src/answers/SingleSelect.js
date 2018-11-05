@@ -12,6 +12,10 @@ class SingleSelect extends React.PureComponent {
   }
 
   handleChange = name => event => {
+    if (Object.keys(this.state).length === 1) {
+      this.props.changeIsAnswered(true);
+    }
+
     this.props.question.answerChoices.forEach((choice) => {
       this.setState({ [choice]: false }); // tühistab kõigi valimise enne uue valimist
     });
@@ -51,7 +55,8 @@ class SingleSelect extends React.PureComponent {
 }
 
 SingleSelect.propTypes = {
-  question: PropTypes.object.isRequired
+  question: PropTypes.object.isRequired,
+  changeIsAnswered: PropTypes.func.isRequired
 };
 
 export default SingleSelect;
