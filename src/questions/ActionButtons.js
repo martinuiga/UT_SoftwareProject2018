@@ -33,6 +33,7 @@ class ActionButtons extends React.PureComponent {
           style={{ marginRight: '10px' }}
           label="Jäta vahele"
           onClick={this.handleClickSkipButton}
+          disabled={this.props.isSaved}
         />
         <RaisedButton
           label={this.props.isSaved ? 'Järgmine' : 'Salvesta'}

@@ -7,7 +7,7 @@ import Radio from '@material-ui/core/Radio';
 class SingleSelect extends React.PureComponent {
   constructor(props) {
     super(props);
-    const initialState = { [props.question.answerChoices[0]]: true };
+    const initialState = { [props.question.answerChoices[0]]: false };
     this.state = initialState;
   }
 
