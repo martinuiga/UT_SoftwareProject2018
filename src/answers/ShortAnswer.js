@@ -1,6 +1,7 @@
 import React from 'react';
 import { merge } from 'ramda';
 import TextField from '@material-ui/core/TextField';
+import { readRoppTxt } from '../file/FileReader';
 
 const MAXIMUM_CHARACTER_COUNT = 150;
 const helperText = 'Vastus võib olla maksimaalselt ' +
@@ -20,6 +21,7 @@ class ShortAnswer extends React.PureComponent {
   }
 
   render() {
+    console.log('FAILI SISU', readRoppTxt());
     return (
       <TextField
         id="shortTextAnswer"
