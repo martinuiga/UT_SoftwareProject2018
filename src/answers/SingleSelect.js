@@ -26,7 +26,7 @@ class SingleSelect extends React.PureComponent {
     return (
       <FormControlLabel
         key={choice}
-        style={{ display: 'flex', justifyContent: 'center' }}
+        style={{ marginLeft: '200px', display: 'flex' }}
         control={(
           <Radio
             checked={this.state[choice] === true}

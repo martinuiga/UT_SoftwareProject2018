@@ -7,6 +7,7 @@ import ShortAnswer from '../answers/ShortAnswer';
 import Question from './Question';
 import ActionButtons from './ActionButtons';
 import { getQuestions } from '../api/QuestionsService';
+import { sendAnswer } from '../api/AnswerService';
 
 class QuestionsForm extends React.PureComponent {
   constructor(props) {
@@ -17,6 +18,7 @@ class QuestionsForm extends React.PureComponent {
       isSaved: false,
       isAnswered: false
     };
+    this.shortAnswerQuestion = React.createRef();
   }
 
   componentWillMount() {
@@ -24,6 +26,21 @@ class QuestionsForm extends React.PureComponent {
       this.setState({ questions });
     });
   }
+
+  handleSaveAnswer = () => {
+    const question = this.state.questions[this.state.currentQuestionIndex];
+    let answer;
+
+    if (question.type === 'short-answer-question') {
+      answer = this.shortAnswerQuestion.current.getAnswer();
+    }
+
+    const data = {
+      question: question.question,
+      answer: answer
+    };
+    sendAnswer(data);
+  };
 
   changeCurrentQuestionIndex = () => {
     this.setState((prevState) => {
@@ -67,6 +84,7 @@ class QuestionsForm extends React.PureComponent {
       case 'short-answer-question':
         return (
           <ShortAnswer
+            ref={this.shortAnswerQuestion}
             question={question}
             isAnswered={this.state.isAnswered}
             changeIsAnswered={this.changeIsAnswered}
@@ -81,8 +99,10 @@ class QuestionsForm extends React.PureComponent {
     const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
     if (currentQuestion) {
       return (
-        <div style={{ textAlign: 'center', minHeight: '300px' }}>
-          <Question title={currentQuestion.question} />
+        <div style={{ minHeight: '300px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Question title={currentQuestion.question} />
+          </div>
           {this.renderCorrectAnswerOptions(currentQuestion)}
         </div>
       );
@@ -100,6 +120,7 @@ class QuestionsForm extends React.PureComponent {
         changeCurrentQuestionIndex={this.changeCurrentQuestionIndex}
         changeIsSaved={this.changeIsSaved}
         changeIsAnswered={this.changeIsAnswered}
+        saveAnswer={this.handleSaveAnswer}
       />
     );
   }

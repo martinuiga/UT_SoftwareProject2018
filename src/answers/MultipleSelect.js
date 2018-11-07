@@ -27,7 +27,7 @@ class MultipleSelect extends React.PureComponent {
     return (
       <FormControlLabel
         key={choice}
-        style={{ display: 'flex', justifyContent: 'center' }}
+        style={{ marginLeft: '200px', justifyContent: 'center' }}
         control={(
           <Checkbox
             checked={this.state[choice]}

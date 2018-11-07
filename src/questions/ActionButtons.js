@@ -10,10 +10,11 @@ const buttonsStyle = {
 
 class ActionButtons extends React.PureComponent {
   handleClickSaveButton = () => {
-    if (this.props.isSaved) {
-      this.props.changeCurrentQuestionIndex();
+    if (!this.props.isSaved) {
+      this.props.saveAnswer();
+      this.props.changeIsSaved();
     }
-    this.props.changeIsSaved();
+    this.props.changeCurrentQuestionIndex();
   };
 
   handleClickSkipButton = () => {
@@ -48,7 +49,8 @@ ActionButtons.propTypes = {
   isSaved: PropTypes.bool,
   isAnswered: PropTypes.bool,
   changeCurrentQuestionIndex: PropTypes.func.isRequired,
-  changeIsSaved: PropTypes.func.isRequired
+  changeIsSaved: PropTypes.func.isRequired,
+  saveAnswer: PropTypes.func.isRequired
 };
 
 ActionButtons.defaultProps = {
