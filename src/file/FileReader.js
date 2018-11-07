@@ -1,22 +1,19 @@
-export const readTextFile = file => {
-  const rawFile = new XMLHttpRequest();
-  rawFile.open('GET', file, false);
-  rawFile.onreadystatechange = () => {
-    if (rawFile.readyState === 4) {
-      if (rawFile.status === 200 || rawFile.status === 0) {
-        const allText = rawFile.responseText;
-        console.log('allText: ', allText);
-        this.setState({
-          fundData: allText
-        });
-      }
-    }
-  };
-  rawFile.send(null);
+import { concat } from 'ramda';
+
+const readTextFile = (file) => {
+  return fetch(file)
+    .then(response => response.text())
+    .then((data) => {
+      return data.split('\n').filter(Boolean);
+    });
 };
 
-export const readRoppTxt = () => {
-  readTextFile('../assets/files/ropp.txt');
+export const getCurseWords = () => {
+  return readTextFile('ropp.txt')
+    .then(roppWords => readTextFile('big_bad.unique.txt')
+      .then(bigBadWords => {
+        return concat(roppWords, bigBadWords);
+      }));
 };
 
 export default FileReader;
