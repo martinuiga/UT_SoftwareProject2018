@@ -1,25 +1,30 @@
 import React from 'react';
-import { merge } from 'ramda';
+import { isEmpty, merge } from 'ramda';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-import { getCurseWords } from '../file/FileReader';
 
 const MAXIMUM_CHARACTER_COUNT = 150;
 const helperText = 'Vastus võib olla maksimaalselt ' +
   MAXIMUM_CHARACTER_COUNT +
   ' tähemärgi pikkune';
+
 class ShortAnswer extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       answerText: ''
-      /* containsCurses: false */
     };
   }
 
-  handleAnswerTextChange = (event) => {
-    event.persist();
-    this.setState((prevState) => merge(prevState, { answerText: event.target.value }));
-  }
+  handleAnswerTextChange = (e) => {
+    if (!this.props.isAnswered && !isEmpty(e.target.value)) {
+      this.props.changeIsAnswered(true);
+    }
+    if (isEmpty(e.target.value)) {
+      this.props.changeIsAnswered(false);
+    }
+    this.setState(prevState => merge(prevState, { answerText: e.target.value }));
+  };
 
   render() {
     return (
@@ -39,5 +44,14 @@ class ShortAnswer extends React.PureComponent {
     );
   }
 }
+
+ShortAnswer.propTypes = {
+  isAnswered: PropTypes.bool,
+  changeIsAnswered: PropTypes.func.isRequired
+};
+
+ShortAnswer.defaultProps = {
+  isAnswered: false
+};
 
 export default ShortAnswer;

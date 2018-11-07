@@ -16,6 +16,10 @@ class MultipleSelect extends React.PureComponent {
   }
 
   handleChange = name => event => {
+    if (Object.keys(this.state).length === 1) {
+      this.props.changeIsAnswered(true);
+    }
+
     this.setState({ [name]: event.target.checked });
   };
 
@@ -52,7 +56,8 @@ class MultipleSelect extends React.PureComponent {
 }
 
 MultipleSelect.propTypes = {
-  question: PropTypes.object.isRequired
+  question: PropTypes.object.isRequired,
+  changeIsAnswered: PropTypes.func.isRequired
 };
 
 export default MultipleSelect;
