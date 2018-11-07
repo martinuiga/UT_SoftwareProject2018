@@ -1,14 +1,19 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import QuestionsForm, { renderCorrectAnswerOptions } from '../QuestionsForm';
+import QuestionsForm from '../QuestionsForm';
 import SingleSelect from '../../answers/SingleSelect';
 import MultipleSelect from '../../answers/MultipleSelect';
 import ShortAnswer from '../../answers/ShortAnswer';
 
 describe('<QuestionsForm />', () => {
+  let wrapper;
+
+  beforeAll(() => {
+    wrapper = shallow(<QuestionsForm />);
+  });
+
   it('renders something', () => {
-    const wrapper = shallow(<QuestionsForm />);
     expect(wrapper.length).toEqual(1);
   });
 
@@ -19,7 +24,7 @@ describe('<QuestionsForm />', () => {
       type: 'single-select-question',
       answerChoices: ['answer1', 'answer2']
     };
-    const answerOptions = renderCorrectAnswerOptions(question);
+    const answerOptions = wrapper.instance().renderCorrectAnswerOptions(question);
     expect(answerOptions.type).toEqual(SingleSelect);
   });
 
@@ -30,7 +35,7 @@ describe('<QuestionsForm />', () => {
       type: 'multiple-select-question',
       answerChoices: ['answer1', 'answer2']
     };
-    const answerOptions = renderCorrectAnswerOptions(question);
+    const answerOptions = wrapper.instance().renderCorrectAnswerOptions(question);
     expect(answerOptions.type).toEqual(MultipleSelect);
   });
 
@@ -41,7 +46,7 @@ describe('<QuestionsForm />', () => {
       type: 'short-answer-question',
       answerChoices: []
     };
-    const answerOptions = renderCorrectAnswerOptions(question);
+    const answerOptions = wrapper.instance().renderCorrectAnswerOptions(question);
     expect(answerOptions.type).toEqual(ShortAnswer);
   });
 });

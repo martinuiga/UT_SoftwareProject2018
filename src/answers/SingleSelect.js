@@ -7,11 +7,15 @@ import Radio from '@material-ui/core/Radio';
 class SingleSelect extends React.PureComponent {
   constructor(props) {
     super(props);
-    const initialState = { [props.question.answerChoices[0]]: true };
+    const initialState = { [props.question.answerChoices[0]]: false };
     this.state = initialState;
   }
 
   handleChange = name => event => {
+    if (Object.keys(this.state).length === 1) {
+      this.props.changeIsAnswered(true);
+    }
+
     this.props.question.answerChoices.forEach((choice) => {
       this.setState({ [choice]: false }); // tühistab kõigi valimise enne uue valimist
     });
@@ -51,7 +55,8 @@ class SingleSelect extends React.PureComponent {
 }
 
 SingleSelect.propTypes = {
-  question: PropTypes.object.isRequired
+  question: PropTypes.object.isRequired,
+  changeIsAnswered: PropTypes.func.isRequired
 };
 
 export default SingleSelect;

@@ -8,38 +8,14 @@ import Question from './Question';
 import ActionButtons from './ActionButtons';
 import { getQuestions } from '../api/QuestionsService';
 
-export const renderCorrectAnswerOptions = (question) => {
-  switch (question.type) {
-    case 'single-select-question':
-      return (
-        <SingleSelect
-          question={question}
-        />
-      );
-    case 'multiple-select-question':
-
-      return (
-        <MultipleSelect
-          question={question}
-        />
-      );
-    case 'short-answer-question':
-      return (
-        <ShortAnswer
-          question={question}
-        />
-      );
-    default:
-      return '';
-  }
-};
-
 class QuestionsForm extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       currentQuestionIndex: 0,
-      questions: []
+      questions: [],
+      isSaved: false,
+      isAnswered: false
     };
   }
 
@@ -58,17 +34,56 @@ class QuestionsForm extends React.PureComponent {
         currentQuestionIndex = 0;
       }
 
-      return { currentQuestionIndex };
+      return { currentQuestionIndex, isAnswered: false };
     });
+  };
+
+  changeIsSaved = () => {
+    this.setState((prevState) => ({
+      isSaved: !prevState.isSaved
+    }));
+  };
+
+  changeIsAnswered = (isAnswered) => {
+    this.setState({ isAnswered });
+  };
+
+  renderCorrectAnswerOptions = (question) => {
+    switch (question.type) {
+      case 'single-select-question':
+        return (
+          <SingleSelect
+            question={question}
+            changeIsAnswered={this.changeIsAnswered}
+          />
+        );
+      case 'multiple-select-question':
+        return (
+          <MultipleSelect
+            question={question}
+            changeIsAnswered={this.changeIsAnswered}
+          />
+        );
+      case 'short-answer-question':
+        return (
+          <ShortAnswer
+            question={question}
+            isAnswered={this.state.isAnswered}
+            changeIsAnswered={this.changeIsAnswered}
+          />
+        );
+      default:
+        return '';
+    }
   };
 
   renderQuestionAndAnswer = () => {
     const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
     if (currentQuestion) {
       return (
-        <div style={{ textAlign: 'center', minHeight: '260px' }}>
+        <div style={{ textAlign: 'center', minHeight: '300px' }}>
           <Question title={currentQuestion.question} />
-          {renderCorrectAnswerOptions(currentQuestion)}
+          {this.renderCorrectAnswerOptions(currentQuestion)}
         </div>
       );
     }
@@ -80,7 +95,11 @@ class QuestionsForm extends React.PureComponent {
 
     return (
       <ActionButtons
+        isSaved={this.state.isSaved}
+        isAnswered={this.state.isAnswered}
         changeCurrentQuestionIndex={this.changeCurrentQuestionIndex}
+        changeIsSaved={this.changeIsSaved}
+        changeIsAnswered={this.changeIsAnswered}
       />
     );
   }
