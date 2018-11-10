@@ -13,8 +13,9 @@ class ActionButtons extends React.PureComponent {
     if (!this.props.isSaved) {
       this.props.saveAnswer();
       this.props.changeIsSaved();
+    } else {
+      this.props.changeCurrentQuestionIndex();
     }
-    this.props.changeCurrentQuestionIndex();
   };
 
   handleClickSkipButton = () => {
