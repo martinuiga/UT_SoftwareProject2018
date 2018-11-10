@@ -1,5 +1,4 @@
 import React from 'react';
-import { merge } from 'ramda';
 import PropTypes from 'prop-types';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -9,11 +8,25 @@ class MultipleSelect extends React.PureComponent {
   constructor(props) {
     super(props);
     const initialState = {};
+
     props.question.answerChoices.forEach((choice) => {
-      merge(initialState, { [choice]: false });
+      initialState[choice] = false;
     });
     this.state = initialState;
   }
+
+  getAnswers = () => {
+    const answerChoices = this.props.question.answerChoices;
+    const selectedAnswers = [];
+
+    for (let i = 0; i < answerChoices.length; i++) {
+      const answerChoice = answerChoices[i];
+      if (this.state[answerChoice]) {
+        selectedAnswers.push(answerChoice);
+      }
+    }
+    return selectedAnswers;
+  };
 
   handleChange = name => event => {
     if (Object.keys(this.state).length === 1) {
@@ -27,7 +40,7 @@ class MultipleSelect extends React.PureComponent {
     return (
       <FormControlLabel
         key={choice}
-        style={{ display: 'flex', justifyContent: 'center' }}
+        style={{ marginLeft: '200px', display: 'flex' }}
         control={(
           <Checkbox
             checked={this.state[choice]}

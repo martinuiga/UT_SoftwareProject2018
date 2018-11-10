@@ -16,6 +16,10 @@ class ShortAnswer extends React.PureComponent {
     };
   }
 
+  getAnswer = () => {
+    return this.state.answerText;
+  };
+
   handleAnswerTextChange = (e) => {
     if (!this.props.isAnswered && !isEmpty(e.target.value)) {
       this.props.changeIsAnswered(true);
