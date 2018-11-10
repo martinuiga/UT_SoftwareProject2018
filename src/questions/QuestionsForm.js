@@ -67,7 +67,7 @@ class QuestionsForm extends React.PureComponent {
         currentQuestionIndex = 0;
       }
 
-      return { currentQuestionIndex, isAnswered: false };
+      return { currentQuestionIndex, isAnswered: false, isSaved: false };
     });
   };
 
