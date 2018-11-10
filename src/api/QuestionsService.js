@@ -14,7 +14,7 @@ const getQuestionType = (acf) => {
   return '';
 };
 
-const structurizeQuestions = (APIresponseData) => {
+export const structurizeQuestions = (APIresponseData) => {
   const questions = [];
   APIresponseData.forEach(question => {
     const questionObject = {
