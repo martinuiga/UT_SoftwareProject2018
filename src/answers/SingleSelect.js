@@ -11,6 +11,18 @@ class SingleSelect extends React.PureComponent {
     this.state = initialState;
   }
 
+  getAnswer = () => {
+    const answerChoices = this.props.question.answerChoices;
+
+    for (let i = 0; i < answerChoices.length; i++) {
+      const answerChoice = answerChoices[i];
+      if (this.state[answerChoice]) {
+        return answerChoice;
+      }
+    }
+    return null;
+  };
+
   handleChange = name => event => {
     if (Object.keys(this.state).length === 1) {
       this.props.changeIsAnswered(true);

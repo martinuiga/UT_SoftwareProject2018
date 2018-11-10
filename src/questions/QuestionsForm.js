@@ -19,6 +19,7 @@ class QuestionsForm extends React.PureComponent {
       isAnswered: false
     };
     this.shortAnswerQuestion = React.createRef();
+    this.singleSelectQuestion = React.createRef();
   }
 
   componentWillMount() {
@@ -33,6 +34,9 @@ class QuestionsForm extends React.PureComponent {
 
     if (question.type === 'short-answer-question') {
       answer = this.shortAnswerQuestion.current.getAnswer();
+    }
+    if (question.type === 'single-select-question') {
+      answer = this.singleSelectQuestion.current.getAnswer();
     }
 
     const data = {
@@ -70,6 +74,7 @@ class QuestionsForm extends React.PureComponent {
       case 'single-select-question':
         return (
           <SingleSelect
+            ref={this.singleSelectQuestion}
             question={question}
             changeIsAnswered={this.changeIsAnswered}
           />
