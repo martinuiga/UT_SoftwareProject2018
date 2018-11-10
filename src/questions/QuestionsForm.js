@@ -20,6 +20,7 @@ class QuestionsForm extends React.PureComponent {
     };
     this.shortAnswerQuestion = React.createRef();
     this.singleSelectQuestion = React.createRef();
+    this.multipleSelectQuestion = React.createRef();
   }
 
   componentWillMount() {
@@ -28,22 +29,33 @@ class QuestionsForm extends React.PureComponent {
     });
   }
 
+  composeDataAndSendAnswer = (question, answer) => {
+    const data = {
+      question: question,
+      answer: answer
+    };
+    sendAnswer(data);
+  };
+
   handleSaveAnswer = () => {
     const question = this.state.questions[this.state.currentQuestionIndex];
     let answer;
 
     if (question.type === 'short-answer-question') {
       answer = this.shortAnswerQuestion.current.getAnswer();
-    }
-    if (question.type === 'single-select-question') {
+    } else if (question.type === 'single-select-question') {
       answer = this.singleSelectQuestion.current.getAnswer();
-    }
+    } else if (question.type === 'multiple-select-question') {
+      const answers = this.multipleSelectQuestion.current.getAnswers();
 
-    const data = {
-      question: question.question,
-      answer: answer
-    };
-    sendAnswer(data);
+      answers.forEach((asw) => {
+        this.composeDataAndSendAnswer(question.question, asw);
+      });
+      return;
+    } else {
+      throw new Error('Invalid question type');
+    }
+    this.composeDataAndSendAnswer(question.question, answer);
   };
 
   changeCurrentQuestionIndex = () => {
@@ -82,6 +94,7 @@ class QuestionsForm extends React.PureComponent {
       case 'multiple-select-question':
         return (
           <MultipleSelect
+            ref={this.multipleSelectQuestion}
             question={question}
             changeIsAnswered={this.changeIsAnswered}
           />
