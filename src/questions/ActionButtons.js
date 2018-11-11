@@ -9,6 +9,23 @@ const buttonsStyle = {
 };
 
 class ActionButtons extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = { showPreviousAnswers: this.props.showPreviousAnswers };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props !== prevProps) {
+      if (this.props.isShortAnswerQuestion) {
+        this.setState({ showPreviousAnswers: true });
+      } else {
+        this.setState({
+          showPreviousAnswers: this.props.showPreviousAnswers
+        });
+      }
+    }
+  }
+
   handleClickSaveButton = () => {
     if (!this.props.isSaved) {
       this.props.saveAnswer();
@@ -19,13 +36,18 @@ class ActionButtons extends React.PureComponent {
   };
 
   handleClickSkipButton = () => {
+    let showPreviousAnswers = true;
+
     if (this.props.isAnswered) {
       confirm('Vastus ei ole salvestatud. Kas olete kindel?')
         .then(() => this.props.changeCurrentQuestionIndex())
         .catch(() => { });
-    } else {
-      this.props.changeCurrentQuestionIndex();
     }
+    if (this.state.showPreviousAnswers) {
+      this.props.changeCurrentQuestionIndex();
+      showPreviousAnswers = false;
+    }
+    this.props.changeShowPreviousAnswers(showPreviousAnswers);
   }
 
   render() {
@@ -33,7 +55,7 @@ class ActionButtons extends React.PureComponent {
       <div style={buttonsStyle}>
         <RaisedButton
           style={{ marginRight: '10px' }}
-          label="Jäta vahele"
+          label={this.state.showPreviousAnswers ? 'Jäta vahele' : 'Jäta vahele ja vaata vastuseid'}
           onClick={this.handleClickSkipButton}
           disabled={this.props.isSaved}
         />
@@ -49,6 +71,8 @@ class ActionButtons extends React.PureComponent {
 ActionButtons.propTypes = {
   isSaved: PropTypes.bool,
   isAnswered: PropTypes.bool,
+  showPreviousAnswers: PropTypes.bool.isRequired,
+  isShortAnswerQuestion: PropTypes.bool,
   changeCurrentQuestionIndex: PropTypes.func.isRequired,
   changeIsSaved: PropTypes.func.isRequired,
   saveAnswer: PropTypes.func.isRequired
@@ -56,7 +80,8 @@ ActionButtons.propTypes = {
 
 ActionButtons.defaultProps = {
   isSaved: false,
-  isAnswered: false
+  isAnswered: false,
+  isShortAnswerQuestion: false
 };
 
 export default ActionButtons;
