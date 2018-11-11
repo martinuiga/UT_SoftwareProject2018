@@ -4,7 +4,7 @@ import { Subheader } from 'material-ui';
 
 const Question = (props) => {
   return (
-    <Subheader style={{ fontSize: '20px' }}>
+    <Subheader style={{ fontSize: '20px', lineHeight: '30px', margin: '10px 0px 10px 0px' }}>
       {props.title}
     </Subheader>
   );
