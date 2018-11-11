@@ -1,4 +1,5 @@
 import React from 'react';
+import { find, propEq, pluck, isEmpty, clone } from 'ramda';
 import { Paper } from 'material-ui';
 
 import SingleSelect from '../answers/SingleSelect';
@@ -7,6 +8,12 @@ import ShortAnswer from '../answers/ShortAnswer';
 import Question from './Question';
 import ActionButtons from './ActionButtons';
 import { getQuestions } from '../api/QuestionsService';
+import { sendAnswer, getAnswers } from '../api/AnswerService';
+import ShortAnswerQuestionAnswers from '../answers/previous/ShortAnswerQuestionAnswers';
+
+const getRandomIndex = (answers) => {
+  return Math.floor(Math.random() * answers.length);
+};
 
 class QuestionsForm extends React.PureComponent {
   constructor(props) {
@@ -14,16 +21,64 @@ class QuestionsForm extends React.PureComponent {
     this.state = {
       currentQuestionIndex: 0,
       questions: [],
+      answers: [],
       isSaved: false,
-      isAnswered: false
+      isAnswered: false,
+      showPreviousAnswers: false
     };
+    this.randomIndexes = [];
+    this.shortAnswerQuestion = React.createRef();
+    this.singleSelectQuestion = React.createRef();
+    this.multipleSelectQuestion = React.createRef();
   }
 
   componentWillMount() {
-    return getQuestions().then(questions => {
-      this.setState({ questions });
-    });
+    return getQuestions()
+      .then((questions) => {
+        return getAnswers()
+          .then((answers) => {
+            this.setState({ questions, answers });
+          });
+      });
   }
+
+  setRandomIndexes = (answers) => {
+    const answersArray = clone(answers);
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = getRandomIndex(answersArray);
+      this.randomIndexes.push(randomIndex);
+      answersArray.splice(randomIndex, 1);
+    }
+  };
+
+  composeDataAndSendAnswer = (question, answer) => {
+    const data = {
+      question: question,
+      answer: answer
+    };
+    sendAnswer(data);
+  };
+
+  handleSaveAnswer = () => {
+    const question = this.state.questions[this.state.currentQuestionIndex];
+    let answer;
+
+    if (question.type === 'short-answer-question') {
+      answer = this.shortAnswerQuestion.current.getAnswer();
+    } else if (question.type === 'single-select-question') {
+      answer = this.singleSelectQuestion.current.getAnswer();
+    } else if (question.type === 'multiple-select-question') {
+      const answers = this.multipleSelectQuestion.current.getAnswers();
+
+      answers.forEach((asw) => {
+        this.composeDataAndSendAnswer(question.question, asw);
+      });
+      return;
+    } else {
+      throw new Error('Invalid question type');
+    }
+    this.composeDataAndSendAnswer(question.question, answer);
+  };
 
   changeCurrentQuestionIndex = () => {
     this.setState((prevState) => {
@@ -34,7 +89,7 @@ class QuestionsForm extends React.PureComponent {
         currentQuestionIndex = 0;
       }
 
-      return { currentQuestionIndex, isAnswered: false };
+      return { currentQuestionIndex, isAnswered: false, isSaved: false };
     });
   };
 
@@ -48,11 +103,16 @@ class QuestionsForm extends React.PureComponent {
     this.setState({ isAnswered });
   };
 
+  changeShowPreviousAnswers = (isShow) => {
+    this.setState({ showPreviousAnswers: isShow });
+  };
+
   renderCorrectAnswerOptions = (question) => {
     switch (question.type) {
       case 'single-select-question':
         return (
           <SingleSelect
+            ref={this.singleSelectQuestion}
             question={question}
             changeIsAnswered={this.changeIsAnswered}
           />
@@ -60,6 +120,7 @@ class QuestionsForm extends React.PureComponent {
       case 'multiple-select-question':
         return (
           <MultipleSelect
+            ref={this.multipleSelectQuestion}
             question={question}
             changeIsAnswered={this.changeIsAnswered}
           />
@@ -67,6 +128,7 @@ class QuestionsForm extends React.PureComponent {
       case 'short-answer-question':
         return (
           <ShortAnswer
+            ref={this.shortAnswerQuestion}
             question={question}
             isAnswered={this.state.isAnswered}
             changeIsAnswered={this.changeIsAnswered}
@@ -77,12 +139,50 @@ class QuestionsForm extends React.PureComponent {
     }
   };
 
+  renderPreviousAnswers = (question) => {
+    // TODO remove if question type is added to answers data
+    const questionType = find(propEq('question', question.question))(this.state.questions).type;
+    const answerObjects = this.state.answers.filter((answer) => answer.question === question.question);
+    const answers = pluck('answer', answerObjects);
+
+    if (!isEmpty(answers)) {
+      switch (questionType) {
+        case 'single-select-question':
+          return (
+            // <SingleSelectAnswers answers={answers} />
+            null
+          );
+        case 'multiple-select-question':
+          return (
+            // <MultipleSelectAnswers answers={answers} />
+            null
+          );
+        case 'short-answer-question': {
+          if (isEmpty(this.randomIndexes)) {
+            this.setRandomIndexes(answers);
+          }
+          return (
+            <ShortAnswerQuestionAnswers
+              answers={answers}
+              randomIndexes={this.randomIndexes}
+            />
+          );
+        }
+        default:
+          return '';
+      }
+    }
+    return null;
+  };
+
   renderQuestionAndAnswer = () => {
     const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
     if (currentQuestion) {
       return (
-        <div style={{ textAlign: 'center', minHeight: '300px' }}>
-          <Question title={currentQuestion.question} />
+        <div style={{ minHeight: '270px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <Question title={currentQuestion.question} />
+          </div>
           {this.renderCorrectAnswerOptions(currentQuestion)}
         </div>
       );
@@ -90,16 +190,31 @@ class QuestionsForm extends React.PureComponent {
     return '';
   };
 
+  renderAnswers = () => {
+    const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
+    if (currentQuestion) {
+      return (
+        this.renderPreviousAnswers(currentQuestion)
+      );
+    }
+    return '';
+  }
+
   renderActionButtons() {
-    if (!this.state.questions[this.state.currentQuestionIndex]) return null;
+    const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
+    if (!currentQuestion) return null;
 
     return (
       <ActionButtons
         isSaved={this.state.isSaved}
         isAnswered={this.state.isAnswered}
+        showPreviousAnswers={this.state.showPreviousAnswers}
+        isShortAnswerQuestion={currentQuestion.type === 'short-answer-question'}
         changeCurrentQuestionIndex={this.changeCurrentQuestionIndex}
         changeIsSaved={this.changeIsSaved}
         changeIsAnswered={this.changeIsAnswered}
+        changeShowPreviousAnswers={this.changeShowPreviousAnswers}
+        saveAnswer={this.handleSaveAnswer}
       />
     );
   }
@@ -108,14 +223,17 @@ class QuestionsForm extends React.PureComponent {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Paper style={{
-          height: 400,
+          minHeight: 400,
+          maxHeight: 700,
           width: 600,
           margin: 20,
-          textAlign: 'center'
+          textAlign: 'center',
+          overFlow: 'auto'
         }}
         >
           {this.renderQuestionAndAnswer()}
           {this.renderActionButtons()}
+          {this.renderAnswers()}
         </Paper>
       </div>
     );
