@@ -17,7 +17,10 @@ class ShortAnswer extends React.PureComponent {
   }
 
   getAnswer = () => {
-    return this.state.answerText;
+    const answer = this.state.answerText;
+
+    this.setState({ answerText: '' });
+    return answer;
   };
 
   handleAnswerTextChange = (e) => {
