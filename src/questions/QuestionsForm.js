@@ -1,4 +1,5 @@
 import React from 'react';
+import { find, propEq, pluck } from 'ramda';
 import { Paper } from 'material-ui';
 
 import SingleSelect from '../answers/SingleSelect';
@@ -118,6 +119,34 @@ class QuestionsForm extends React.PureComponent {
     }
   };
 
+  renderPreviousAnswers = (question) => {
+    // TODO remove if question type is added to answers data
+    const questionType = find(propEq('question', question.question))(this.state.questions).type;
+    const answerObjects = this.state.answers.filter((answer) => answer.question === question.question);
+    const answers = pluck('answer', answerObjects);
+
+    switch (questionType) {
+      case 'single-select-question':
+        return (
+          // <SingleSelectAnswers answers={answers} />
+          null
+        );
+      case 'multiple-select-question':
+        return (
+          // <MultipleSelectAnswers answers={answers} />
+          null
+        );
+      case 'short-answer-question':
+        return (
+          // <ShortAnswerAnswers answers={answers} />
+          null
+        );
+      default:
+        return '';
+    }
+
+  };
+
   renderQuestionAndAnswer = () => {
     const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
     if (currentQuestion) {
@@ -127,6 +156,7 @@ class QuestionsForm extends React.PureComponent {
             <Question title={currentQuestion.question} />
           </div>
           {this.renderCorrectAnswerOptions(currentQuestion)}
+          {this.renderPreviousAnswers(currentQuestion)}
         </div>
       );
     }
