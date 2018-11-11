@@ -10,22 +10,6 @@ const buttonsStyle = {
 };
 
 class ActionButtons extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = { showPreviousAnswers: this.props.showPreviousAnswers };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props !== prevProps) {
-      if (this.props.isShortAnswerQuestion) {
-        this.setState({ showPreviousAnswers: true });
-      } else {
-        this.setState({
-          showPreviousAnswers: this.props.showPreviousAnswers
-        });
-      }
-    }
-  }
 
   handleClickSaveButton = () => {
     if (!this.props.isSaved) {
@@ -42,7 +26,6 @@ class ActionButtons extends React.PureComponent {
   };
 
   handleClickSkipButton = () => {
-    let showPreviousAnswers = true;
 
     if (this.props.isAnswered) {
       confirm('Vastus ei ole salvestatud. Kas olete kindel?')
@@ -52,11 +35,11 @@ class ActionButtons extends React.PureComponent {
         })
         .catch(() => { });
     }
-    if (this.state.showPreviousAnswers) {
+    if (this.props.showPreviousAnswers) {
       this.props.changeCurrentQuestionIndex();
-      showPreviousAnswers = false;
+    } else {
+      this.props.changeShowPreviousAnswers(true);
     }
-    this.props.changeShowPreviousAnswers(showPreviousAnswers);
   }
 
   render() {
@@ -64,14 +47,14 @@ class ActionButtons extends React.PureComponent {
       <div style={buttonsStyle}>
         <RaisedButton
           style={{ marginRight: '10px' }}
-          label={this.state.showPreviousAnswers ? 'Jäta vahele' : 'Jäta vahele ja vaata vastuseid'}
+          label={this.props.showPreviousAnswers ? 'Jäta vahele' : 'Jäta vahele ja vaata vastuseid'}
           onClick={this.handleClickSkipButton}
           disabled={this.props.isSaved}
         />
         <RaisedButton
           label={this.props.isSaved ? 'Järgmine' : 'Salvesta'}
           onClick={this.handleClickSaveButton}
-          disabled={!this.props.isShortAnswerQuestion && this.state.showPreviousAnswers}
+          disabled={!this.props.isShortAnswerQuestion && this.props.showPreviousAnswers}
         />
       </div>
     );
