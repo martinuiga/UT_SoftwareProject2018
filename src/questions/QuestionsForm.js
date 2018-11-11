@@ -23,7 +23,8 @@ class QuestionsForm extends React.PureComponent {
       questions: [],
       answers: [],
       isSaved: false,
-      isAnswered: false
+      isAnswered: false,
+      showPreviousAnswers: false
     };
     this.randomIndexes = [];
     this.shortAnswerQuestion = React.createRef();
@@ -100,6 +101,10 @@ class QuestionsForm extends React.PureComponent {
 
   changeIsAnswered = (isAnswered) => {
     this.setState({ isAnswered });
+  };
+
+  changeShowPreviousAnswers = (isShow) => {
+    this.setState({ showPreviousAnswers: isShow });
   };
 
   renderCorrectAnswerOptions = (question) => {
@@ -196,15 +201,19 @@ class QuestionsForm extends React.PureComponent {
   }
 
   renderActionButtons() {
-    if (!this.state.questions[this.state.currentQuestionIndex]) return null;
+    const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
+    if (!currentQuestion) return null;
 
     return (
       <ActionButtons
         isSaved={this.state.isSaved}
         isAnswered={this.state.isAnswered}
+        showPreviousAnswers={this.state.showPreviousAnswers}
+        isShortAnswerQuestion={currentQuestion.type === 'short-answer-question'}
         changeCurrentQuestionIndex={this.changeCurrentQuestionIndex}
         changeIsSaved={this.changeIsSaved}
         changeIsAnswered={this.changeIsAnswered}
+        changeShowPreviousAnswers={this.changeShowPreviousAnswers}
         saveAnswer={this.handleSaveAnswer}
       />
     );
