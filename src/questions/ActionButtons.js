@@ -29,8 +29,13 @@ class ActionButtons extends React.PureComponent {
 
   handleClickSaveButton = () => {
     if (!this.props.isSaved) {
-      this.props.saveAnswer();
-      this.props.changeIsSaved();
+      if (this.props.isShortAnswerQuestion && this.props.containsCurseWords()) {
+        this.props.toggleCurseModal();
+        this.props.changeIsAnswered(false);
+      } else {
+        this.props.saveAnswer();
+        this.props.changeIsSaved();
+      }
     } else {
       this.props.changeCurrentQuestionIndex();
     }
@@ -41,7 +46,10 @@ class ActionButtons extends React.PureComponent {
 
     if (this.props.isAnswered) {
       confirm('Vastus ei ole salvestatud. Kas olete kindel?')
-        .then(() => this.props.changeCurrentQuestionIndex())
+        .then(() => {
+          this.props.changeCurrentQuestionIndex();
+          this.props.changeShowPreviousAnswers(false);
+        })
         .catch(() => { });
     }
     if (this.state.showPreviousAnswers) {
@@ -91,6 +99,9 @@ ActionButtons.propTypes = {
   changeCurrentQuestionIndex: PropTypes.func.isRequired,
   changeIsSaved: PropTypes.func.isRequired,
   changeShowPreviousAnswers: PropTypes.func.isRequired,
+  containsCurseWords: PropTypes.func.isRequired,
+  toggleCurseModal: PropTypes.func.isRequired,
+  changeIsAnswered: PropTypes.func.isRequired,
   saveAnswer: PropTypes.func.isRequired
 };
 
