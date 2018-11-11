@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmpty, merge } from 'ramda';
+import { isEmpty } from 'ramda';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 
@@ -30,21 +30,21 @@ class ShortAnswer extends React.PureComponent {
     if (isEmpty(e.target.value)) {
       this.props.changeIsAnswered(false);
     }
-    this.setState(prevState => merge(prevState, { answerText: e.target.value }));
+    this.setState({ answerText: e.target.value });
   };
 
   render() {
     return (
       <TextField
         id="shortTextAnswer"
-        value={this.state.answerText}
-        onChange={this.handleAnswerTextChange}
         label="Vastus"
+        value={this.state.answerText}
         multiline
         rows="4"
         margin="normal"
         variant="filled"
         helperText={helperText}
+        onChange={this.handleAnswerTextChange}
         inputProps={{ maxLength: MAXIMUM_CHARACTER_COUNT }}
         style={{ width: '450px' }}
       />

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { RaisedButton } from 'material-ui';
 
 import confirm from '../util/confirmation/ConfirmUtil';
-import { getCurseWords } from '../file/FileReader';
 
 const buttonsStyle = {
   textAlign: 'right',
@@ -30,8 +29,13 @@ class ActionButtons extends React.PureComponent {
 
   handleClickSaveButton = () => {
     if (!this.props.isSaved) {
-      this.props.saveAnswer();
-      this.props.changeIsSaved();
+      if (this.props.isShortAnswerQuestion && this.props.containsCurseWords()) {
+        this.props.toggleCurseModal();
+        this.props.changeIsAnswered(false);
+      } else {
+        this.props.saveAnswer();
+        this.props.changeIsSaved();
+      }
     } else {
       this.props.changeCurrentQuestionIndex();
     }
@@ -79,6 +83,9 @@ ActionButtons.propTypes = {
   changeCurrentQuestionIndex: PropTypes.func.isRequired,
   changeIsSaved: PropTypes.func.isRequired,
   changeShowPreviousAnswers: PropTypes.func.isRequired,
+  containsCurseWords: PropTypes.func.isRequired,
+  toggleCurseModal: PropTypes.func.isRequired,
+  changeIsAnswered: PropTypes.func.isRequired,
   saveAnswer: PropTypes.func.isRequired
 };
 
