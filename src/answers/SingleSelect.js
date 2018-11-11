@@ -44,6 +44,7 @@ class SingleSelect extends React.PureComponent {
             checked={this.state[choice] === true}
             onChange={this.handleChange(choice)}
             value={choice}
+            disabled={this.props.showAnswers}
           />
         )}
         label={choice}
@@ -68,6 +69,7 @@ class SingleSelect extends React.PureComponent {
 
 SingleSelect.propTypes = {
   question: PropTypes.object.isRequired,
+  showAnswers: PropTypes.bool.isRequired,
   changeIsAnswered: PropTypes.func.isRequired
 };
 
