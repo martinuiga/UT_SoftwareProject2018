@@ -168,13 +168,10 @@ class QuestionsForm extends React.PureComponent {
   renderPreviousAnswers = (question) => {
     // TODO remove if question type is added to answers data
     const questionType = find(propEq('question', question.question))(this.state.questions).type;
-    console.log('this.state.answers', this.state.answers);
     const answerObjects = this.state.answers.filter((answer) => answer.question === question.question);
     const answers = pluck('answer', answerObjects);
-    console.log('answers', answers);
 
     if (!isEmpty(answers)) {
-      console.log('questionType', questionType);
       switch (questionType) {
         case 'single-select-question':
           return (
@@ -219,7 +216,6 @@ class QuestionsForm extends React.PureComponent {
 
   renderAnswers = () => {
     const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
-    console.log('CURRENT QUESTION', currentQuestion);
     if (currentQuestion) {
       return (
         this.renderPreviousAnswers(currentQuestion)
@@ -263,7 +259,6 @@ class QuestionsForm extends React.PureComponent {
   }
 
   render() {
-    console.log('this.state.showPreviousAnswers', this.state.showPreviousAnswers);
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Paper style={{
