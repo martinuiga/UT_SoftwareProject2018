@@ -7,7 +7,7 @@ import ShortAnswer from '../answers/ShortAnswer';
 import Question from './Question';
 import ActionButtons from './ActionButtons';
 import { getQuestions } from '../api/QuestionsService';
-import { sendAnswer } from '../api/AnswerService';
+import { sendAnswer, getAnswers } from '../api/AnswerService';
 
 class QuestionsForm extends React.PureComponent {
   constructor(props) {
@@ -15,6 +15,7 @@ class QuestionsForm extends React.PureComponent {
     this.state = {
       currentQuestionIndex: 0,
       questions: [],
+      answers: [],
       isSaved: false,
       isAnswered: false
     };
@@ -24,9 +25,13 @@ class QuestionsForm extends React.PureComponent {
   }
 
   componentWillMount() {
-    return getQuestions().then(questions => {
-      this.setState({ questions });
-    });
+    return getQuestions()
+      .then((questions) => {
+        return getAnswers()
+          .then((answers) => {
+            this.setState({ questions, answers });
+          });
+      });
   }
 
   composeDataAndSendAnswer = (question, answer) => {
@@ -144,6 +149,7 @@ class QuestionsForm extends React.PureComponent {
   }
 
   render() {
+    console.log(this.state.answers);
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Paper style={{
