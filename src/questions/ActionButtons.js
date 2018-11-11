@@ -46,7 +46,10 @@ class ActionButtons extends React.PureComponent {
 
     if (this.props.isAnswered) {
       confirm('Vastus ei ole salvestatud. Kas olete kindel?')
-        .then(() => this.props.changeCurrentQuestionIndex())
+        .then(() => {
+          this.props.changeCurrentQuestionIndex();
+          this.props.changeShowPreviousAnswers(false);
+        })
         .catch(() => { });
     }
     if (this.state.showPreviousAnswers) {

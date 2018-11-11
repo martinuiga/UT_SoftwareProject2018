@@ -134,6 +134,7 @@ class QuestionsForm extends React.PureComponent {
           <SingleSelect
             ref={this.singleSelectQuestion}
             question={question}
+            showAnswers={this.state.showPreviousAnswers}
             changeIsAnswered={this.changeIsAnswered}
           />
         );
@@ -142,6 +143,7 @@ class QuestionsForm extends React.PureComponent {
           <MultipleSelect
             ref={this.multipleSelectQuestion}
             question={question}
+            showAnswers={this.state.showPreviousAnswers}
             changeIsAnswered={this.changeIsAnswered}
           />
         );
