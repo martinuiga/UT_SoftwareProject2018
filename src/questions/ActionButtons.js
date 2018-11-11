@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { RaisedButton } from 'material-ui';
-
+import { FacebookProvider, Share } from 'react-facebook';
 import confirm from '../util/confirmation/ConfirmUtil';
 
 const buttonsStyle = {
@@ -43,8 +43,21 @@ class ActionButtons extends React.PureComponent {
   }
 
   render() {
+  // TODO share href juurde töötav jagatav link
     return (
       <div style={buttonsStyle}>
+        <FacebookProvider appId="490127188159867">
+          <Share href="https://e-terminoloogia.herokuapp.com/">
+            {({ handleClick, loading }) => (
+              <RaisedButton
+                style={{ marginRight: '10px' }}
+                type="button"
+                onClick={handleClick}
+                label="Jaga"
+              />
+            )}
+          </Share>
+        </FacebookProvider>
         <RaisedButton
           style={{ marginRight: '10px' }}
           label={this.props.showPreviousAnswers ? 'Jäta vahele' : 'Jäta vahele ja vaata vastuseid'}
