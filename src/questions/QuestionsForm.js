@@ -1,5 +1,5 @@
 import React from 'react';
-import { find, propEq, pluck, isEmpty, clone } from 'ramda';
+import { find, propEq, pluck, isEmpty, clone, contains, merge } from 'ramda';
 import { Paper } from 'material-ui';
 
 import SingleSelect from '../answers/SingleSelect';
@@ -10,6 +10,8 @@ import ActionButtons from './ActionButtons';
 import { getQuestions } from '../api/QuestionsService';
 import { sendAnswer, getAnswers } from '../api/AnswerService';
 import ShortAnswerQuestionAnswers from '../answers/previous/ShortAnswerQuestionAnswers';
+import { getCurseWords } from '../file/FileReader';
+import CurseModal from '../modals/CurseModal';
 
 const getRandomIndex = (answers) => {
   return Math.floor(Math.random() * answers.length);
@@ -24,7 +26,8 @@ class QuestionsForm extends React.PureComponent {
       answers: [],
       isSaved: false,
       isAnswered: false,
-      showPreviousAnswers: false
+      showPreviousAnswers: false,
+      curseModalOpen: false
     };
     this.randomIndexes = [];
     this.shortAnswerQuestion = React.createRef();
@@ -80,6 +83,18 @@ class QuestionsForm extends React.PureComponent {
     this.composeDataAndSendAnswer(question.question, answer);
   };
 
+  containsCurseWords = () => {
+    if (this.shortAnswerQuestion.current) {
+      const answer = this.shortAnswerQuestion.current.getAnswer();
+      const words = answer.split(' ');
+      return getCurseWords().then(curseWords => {
+        const containsCurses = words.some(word => contains(word, curseWords));
+        return containsCurses;
+      });
+    }
+    return false;
+  }
+
   changeCurrentQuestionIndex = () => {
     this.setState((prevState) => {
       let currentQuestionIndex = prevState.currentQuestionIndex + 1;
@@ -106,6 +121,11 @@ class QuestionsForm extends React.PureComponent {
   changeShowPreviousAnswers = (isShow) => {
     this.setState({ showPreviousAnswers: isShow });
   };
+
+  toggleCurseModal = () => {
+    this.setState(prevState => merge(prevState,
+      { curseModalOpen: !prevState.curseModalOpen }));
+  }
 
   renderCorrectAnswerOptions = (question) => {
     switch (question.type) {
@@ -179,7 +199,7 @@ class QuestionsForm extends React.PureComponent {
     const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
     if (currentQuestion) {
       return (
-        <div style={{ minHeight: '270px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <div style={{ textAlign: 'center' }}>
             <Question title={currentQuestion.question} />
           </div>
@@ -214,9 +234,24 @@ class QuestionsForm extends React.PureComponent {
         changeIsSaved={this.changeIsSaved}
         changeIsAnswered={this.changeIsAnswered}
         changeShowPreviousAnswers={this.changeShowPreviousAnswers}
+        containsCurseWords={this.containsCurseWords}
+        toggleCurseModal={this.toggleCurseModal}
         saveAnswer={this.handleSaveAnswer}
       />
     );
+  }
+
+  renderCurseModal() {
+    if (this.state.curseModalOpen) {
+      return (
+        <CurseModal
+          modalOpen={this.state.curseModalOpen}
+          toggleCurseModal={this.toggleCurseModal}
+          changeIsAnswered={this.changeIsAnswered}
+        />
+      );
+    }
+    return '';
   }
 
   render() {
@@ -234,6 +269,7 @@ class QuestionsForm extends React.PureComponent {
           {this.renderQuestionAndAnswer()}
           {this.renderActionButtons()}
           {this.renderAnswers()}
+          {this.renderCurseModal()}
         </Paper>
       </div>
     );
