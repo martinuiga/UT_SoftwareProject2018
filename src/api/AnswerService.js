@@ -4,6 +4,7 @@ import axios from 'axios';
 export const structurizeAnswers = (APIresponseData) => {
   const answers = [];
   APIresponseData.forEach(question => {
+    // TODO add question type
     const answerObject = {
       question: question.term_question,
       answer: question.term_answer
