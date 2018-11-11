@@ -1,6 +1,6 @@
 import React from 'react';
 import { find, propEq, pluck, isEmpty, clone, contains, merge } from 'ramda';
-import { Paper } from 'material-ui';
+import { Paper, Subheader } from 'material-ui';
 
 import SingleSelect from '../answers/SingleSelect';
 import MultipleSelect from '../answers/MultipleSelect';
@@ -12,6 +12,7 @@ import { sendAnswer, getAnswers } from '../api/AnswerService';
 import ShortAnswerQuestionAnswers from '../answers/previous/ShortAnswerQuestionAnswers';
 import { getCurseWords } from '../file/FileReader';
 import CurseModal from '../modals/CurseModal';
+import MultipleSelectAnswers from '../answers/previous/MultipleSingleSelectAnswers';
 
 const getRandomIndex = (answers) => {
   return Math.floor(Math.random() * answers.length);
@@ -98,13 +99,16 @@ class QuestionsForm extends React.PureComponent {
   changeCurrentQuestionIndex = () => {
     this.setState((prevState) => {
       let currentQuestionIndex = prevState.currentQuestionIndex + 1;
-
+      let showPreviousAnswers = false;
       // TODO remove if last page is implemented
       if (currentQuestionIndex > prevState.questions.length - 1) {
         currentQuestionIndex = 0;
       }
-
-      return { currentQuestionIndex, isAnswered: false, isSaved: false };
+      const question = prevState.questions[currentQuestionIndex];
+      if (question.type === 'short-answer-question') {
+        showPreviousAnswers = true;
+      }
+      return { currentQuestionIndex, isAnswered: false, isSaved: false, showPreviousAnswers: showPreviousAnswers };
     });
   };
 
@@ -164,20 +168,21 @@ class QuestionsForm extends React.PureComponent {
   renderPreviousAnswers = (question) => {
     // TODO remove if question type is added to answers data
     const questionType = find(propEq('question', question.question))(this.state.questions).type;
+    console.log('this.state.answers', this.state.answers);
     const answerObjects = this.state.answers.filter((answer) => answer.question === question.question);
     const answers = pluck('answer', answerObjects);
+    console.log('answers', answers);
 
     if (!isEmpty(answers)) {
+      console.log('questionType', questionType);
       switch (questionType) {
         case 'single-select-question':
           return (
-            // <SingleSelectAnswers answers={answers} />
-            null
+            <MultipleSelectAnswers answers={answers} />
           );
         case 'multiple-select-question':
           return (
-            // <MultipleSelectAnswers answers={answers} />
-            null
+            <MultipleSelectAnswers answers={answers} />
           );
         case 'short-answer-question': {
           if (isEmpty(this.randomIndexes)) {
@@ -194,7 +199,7 @@ class QuestionsForm extends React.PureComponent {
           return '';
       }
     }
-    return null;
+    return <Subheader>Kahjuks on veel liiga vähe andmeid, et statistikat kuvada.</Subheader>;
   };
 
   renderQuestionAndAnswer = () => {
@@ -214,6 +219,7 @@ class QuestionsForm extends React.PureComponent {
 
   renderAnswers = () => {
     const currentQuestion = this.state.questions[this.state.currentQuestionIndex];
+    console.log('CURRENT QUESTION', currentQuestion);
     if (currentQuestion) {
       return (
         this.renderPreviousAnswers(currentQuestion)
@@ -257,6 +263,7 @@ class QuestionsForm extends React.PureComponent {
   }
 
   render() {
+    console.log('this.state.showPreviousAnswers', this.state.showPreviousAnswers);
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Paper style={{
@@ -270,7 +277,7 @@ class QuestionsForm extends React.PureComponent {
         >
           {this.renderQuestionAndAnswer()}
           {this.renderActionButtons()}
-          {this.renderAnswers()}
+          {this.state.showPreviousAnswers ? this.renderAnswers() : ''}
           {this.renderCurseModal()}
         </Paper>
       </div>
