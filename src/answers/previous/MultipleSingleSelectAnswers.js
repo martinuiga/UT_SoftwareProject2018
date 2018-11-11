@@ -16,7 +16,6 @@ class MultipleSingleSelectAnswers extends React.PureComponent {
   }
 
   render() {
-    console.log('answers', this.props.answers);
     const data = this.getAnswersOccurencesData();
     return (
       <div style={{ marginTop: '10px' }}>
