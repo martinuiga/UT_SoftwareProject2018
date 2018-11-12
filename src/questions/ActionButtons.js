@@ -13,7 +13,7 @@ class ActionButtons extends React.PureComponent {
 
   handleClickSaveButton = () => {
     if (!this.props.isSaved) {
-      if (this.props.isShortAnswerQuestion && this.props.containsCurseWords()) {
+      if (this.props.isShortAnswerQuestion) {
         this.props.containsCurseWords().then(response => {
           if (response === true) {
             this.props.toggleCurseModal();
