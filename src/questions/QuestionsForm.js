@@ -246,7 +246,6 @@ class QuestionsForm extends React.PureComponent {
   }
 
   renderCurseModal() {
-    console.log('MODAL OPEN', this.state.curseModalOpen);
     if (this.state.curseModalOpen) {
       return (
         <CurseModal
