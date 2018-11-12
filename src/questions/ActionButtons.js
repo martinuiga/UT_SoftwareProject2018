@@ -54,7 +54,7 @@ class ActionButtons extends React.PureComponent {
     return (
       <div style={buttonsStyle}>
         <FacebookProvider appId="490127188159867">
-          <Share href="https://e-terminoloogia.herokuapp.com/">
+          <Share href="http://e-terminoloogia.herokuapp.com/">
             {({ handleClick, loading }) => (
               <RaisedButton
                 style={{ marginRight: '10px' }}
