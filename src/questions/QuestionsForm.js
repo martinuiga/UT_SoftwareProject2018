@@ -90,6 +90,7 @@ class QuestionsForm extends React.PureComponent {
       const words = answer.split(' ');
       return getCurseWords().then(curseWords => {
         const containsCurses = words.some(word => contains(word, curseWords));
+        console.log('CONTAINS CURSES', containsCurses);
         return containsCurses;
       });
     }
@@ -246,6 +247,7 @@ class QuestionsForm extends React.PureComponent {
   }
 
   renderCurseModal() {
+    console.log('MODAL OPEN', this.state.curseModalOpen);
     if (this.state.curseModalOpen) {
       return (
         <CurseModal
