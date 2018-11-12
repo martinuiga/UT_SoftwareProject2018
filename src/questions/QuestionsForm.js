@@ -69,6 +69,7 @@ class QuestionsForm extends React.PureComponent {
 
     if (question.type === 'short-answer-question') {
       answer = this.shortAnswerQuestion.current.getAnswer();
+      this.shortAnswerQuestion.current.clearAnswer();
     } else if (question.type === 'single-select-question') {
       answer = this.singleSelectQuestion.current.getAnswer();
     } else if (question.type === 'multiple-select-question') {
