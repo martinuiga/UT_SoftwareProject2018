@@ -6,7 +6,9 @@ class ShortAnswerQuestionAnswers extends React.PureComponent {
   render() {
     const indexes = this.props.randomIndexes;
     const selectedAnswers = [];
-    for (let i = 0; i < indexes.length; i++) {
+    const numberOfAnswers = this.props.answers.length < indexes.length ? this.props.answers.length : indexes.length;
+
+    for (let i = 0; i < numberOfAnswers; i++) {
       const selectedAnswer = this.props.answers[indexes[i]];
       selectedAnswers.push(selectedAnswer);
       this.props.answers.splice(indexes[i], 1);
