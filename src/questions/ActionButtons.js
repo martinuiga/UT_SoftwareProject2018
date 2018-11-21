@@ -26,6 +26,7 @@ class ActionButtons extends React.PureComponent {
       } else {
         this.props.saveAnswer();
         this.props.changeIsSaved();
+        this.props.changeShowPreviousAnswers(true);
       }
     } else {
       this.props.changeCurrentQuestionIndex();
@@ -74,7 +75,7 @@ class ActionButtons extends React.PureComponent {
         <RaisedButton
           label={this.props.isSaved ? 'Järgmine' : 'Salvesta'}
           onClick={this.handleClickSaveButton}
-          disabled={!this.props.isShortAnswerQuestion && this.props.showPreviousAnswers}
+          disabled={!this.props.isShortAnswerQuestion && this.props.showPreviousAnswers && !this.props.isSaved}
         />
       </div>
     );
