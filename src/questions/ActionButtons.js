@@ -73,7 +73,7 @@ class ActionButtons extends React.PureComponent {
           disabled={this.props.isSaved}
         />
         <RaisedButton
-          label={this.props.isSaved ? 'Järgmine' : 'Salvesta'}
+          label={this.props.isSaved ? 'Järgmine' : 'Vasta'}
           onClick={this.handleClickSaveButton}
           disabled={!this.props.isShortAnswerQuestion && this.props.showPreviousAnswers && !this.props.isSaved}
         />
