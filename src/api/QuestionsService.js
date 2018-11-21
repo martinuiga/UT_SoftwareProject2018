@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { merge } from 'ramda';
+import he from 'he';
 
 const getQuestionType = (acf) => {
   if (acf.is_multiple_select) {
@@ -18,16 +19,16 @@ export const structurizeQuestions = (APIresponseData) => {
   const questions = [];
   APIresponseData.forEach(question => {
     const questionObject = {
-      question: question.title.rendered,
+      question: he.decode(question.title.rendered),
       type: getQuestionType(question.acf)
     };
     let answerChoices = [];
     switch (questionObject.type) {
       case 'single-select-question':
-        answerChoices = question.acf.single_select_choices.split(';');
+        answerChoices = he.decode(question.acf.single_select_choices).split(';');
         break;
       case 'multiple-select-question':
-        answerChoices = question.acf.multiple_select_choices.split(';');
+        answerChoices = he.decode(question.acf.multiple_select_choices).split(';');
         break;
       default:
         break;
