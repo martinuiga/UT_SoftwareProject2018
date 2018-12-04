@@ -38,20 +38,24 @@ class ActionButtons extends React.PureComponent {
     if (this.props.isAnswered) {
       confirm('Vastus ei ole salvestatud. Kas olete kindel?')
         .then(() => {
-          this.props.changeCurrentQuestionIndex();
-          this.props.changeShowPreviousAnswers(false);
+          this.props.changeIsAnswered(false);
+          this.props.changeShowPreviousAnswers(true);
+
+          if (this.props.isShortAnswerQuestion) {
+            this.props.changeCurrentQuestionIndex();
+          }
         })
         .catch(() => { });
-    }
-    if (this.props.showPreviousAnswers) {
+    } else if (this.props.showPreviousAnswers) {
       this.props.changeCurrentQuestionIndex();
     } else {
       this.props.changeShowPreviousAnswers(true);
     }
-  }
+  };
 
   render() {
-  // TODO share href juurde töötav jagatav link
+    const disableSaveButton = this.props.isShortAnswerQuestion ? false : this.props.showPreviousAnswers && !this.props.isSaved;
+    // TODO share href juurde töötav jagatav link
     return (
       <div style={buttonsStyle}>
         <FacebookProvider appId="490127188159867">
@@ -75,7 +79,7 @@ class ActionButtons extends React.PureComponent {
         <RaisedButton
           label={this.props.isSaved ? 'Järgmine' : 'Vasta'}
           onClick={this.handleClickSaveButton}
-          disabled={!this.props.isShortAnswerQuestion && this.props.showPreviousAnswers && !this.props.isSaved}
+          disabled={disableSaveButton}
         />
       </div>
     );
