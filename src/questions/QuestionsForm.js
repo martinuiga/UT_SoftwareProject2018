@@ -1,5 +1,5 @@
 import React from 'react';
-import { find, propEq, pluck, isEmpty, clone, contains, merge } from 'ramda';
+import { find, propEq, pluck, isEmpty, clone, merge, any } from 'ramda';
 import { Paper, Subheader } from 'material-ui';
 
 import SingleSelect from '../answers/SingleSelect';
@@ -90,7 +90,9 @@ class QuestionsForm extends React.PureComponent {
       const answer = this.shortAnswerQuestion.current.getAnswer();
       const words = answer.split(' ');
       return getCurseWords().then(curseWords => {
-        const containsCurses = words.some(word => contains(word, curseWords));
+        const containsCurses = words.some(word => {
+          return any(curse => curse.localeCompare(word), curseWords);
+        });
         return containsCurses;
       });
     }
