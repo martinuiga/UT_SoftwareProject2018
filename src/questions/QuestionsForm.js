@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
 import React from 'react';
 import { find, propEq, pluck, isEmpty, clone, contains, merge } from 'ramda';
 import { Paper, Subheader } from 'material-ui';
