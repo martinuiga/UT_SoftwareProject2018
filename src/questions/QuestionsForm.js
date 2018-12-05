@@ -89,13 +89,12 @@ class QuestionsForm extends React.PureComponent {
     if (this.shortAnswerQuestion.current) {
       const answer = this.shortAnswerQuestion.current.getAnswer();
       const words = answer.split(' ');
-      return getCurseWords().then(curseWords => {
-        const containsCurses = words.some(word => contains(word, curseWords));
-        return containsCurses;
-      });
+      const curseWords = getCurseWords();
+      const containsCurses = words.some(word => contains(word, curseWords));
+      return containsCurses;
     }
     return false;
-  }
+  };
 
   changeCurrentQuestionIndex = () => {
     this.setState((prevState) => {
