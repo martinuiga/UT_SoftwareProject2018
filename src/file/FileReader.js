@@ -1170,8 +1170,7 @@ const uniqueWords = ['roju',
 	'varastama|varastanud',
 	'solgiauk',
 	'lõngus',
-	'tallalakuja',
-	'tupp'];
+	'tallalakuja', 'tupp'];
 
 export const getCurseWords = () => {
 	return concat(roppwords, uniqueWords);
