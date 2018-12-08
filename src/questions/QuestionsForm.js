@@ -13,6 +13,7 @@ import ShortAnswerQuestionAnswers from '../answers/previous/ShortAnswerQuestionA
 import { getCurseWords } from '../file/FileReader';
 import CurseModal from '../modals/CurseModal';
 import MultipleSelectAnswers from '../answers/previous/MultipleSingleSelectAnswers';
+import FinalPage from './FinalPage';
 
 const getRandomIndex = (answers) => {
   return Math.floor(Math.random() * answers.length);
@@ -28,7 +29,8 @@ class QuestionsForm extends React.PureComponent {
       isSaved: false,
       isAnswered: false,
       showPreviousAnswers: false,
-      curseModalOpen: false
+      curseModalOpen: false,
+      finalPageVisible: false
     };
     this.randomIndexes = [];
     this.shortAnswerQuestion = React.createRef();
@@ -100,15 +102,30 @@ class QuestionsForm extends React.PureComponent {
     this.setState((prevState) => {
       let currentQuestionIndex = prevState.currentQuestionIndex + 1;
       let showPreviousAnswers = false;
-      // TODO remove if last page is implemented
-      if (currentQuestionIndex > prevState.questions.length - 1) {
+      let finalPageVisible = false;
+
+      // If finalPage button clicked then start with first question and hide final page
+      if (prevState.finalPageVisible === true) {
         currentQuestionIndex = 0;
+        finalPageVisible = false;
       }
-      const question = prevState.questions[currentQuestionIndex];
-      if (question.type === 'short-answer-question') {
-        showPreviousAnswers = true;
+
+      // If all questions have been answered then set final page visible
+      if (currentQuestionIndex > prevState.questions.length - 1) {
+        finalPageVisible = true;
+      } else {
+        const question = prevState.questions[currentQuestionIndex];
+        if (question.type === 'short-answer-question') {
+          showPreviousAnswers = true;
+        }
       }
-      return { currentQuestionIndex, isAnswered: false, isSaved: false, showPreviousAnswers: showPreviousAnswers };
+      return {
+        currentQuestionIndex,
+        isAnswered: false,
+        isSaved: false,
+        showPreviousAnswers: showPreviousAnswers,
+        finalPageVisible
+      };
     });
   };
 
@@ -259,6 +276,14 @@ class QuestionsForm extends React.PureComponent {
     return '';
   }
 
+  renderFinalPage() {
+    return (
+      <FinalPage
+        answerAgain={this.changeCurrentQuestionIndex}
+      />
+    );
+  }
+
   render() {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -268,13 +293,21 @@ class QuestionsForm extends React.PureComponent {
           width: 600,
           margin: 20,
           textAlign: 'center',
-          overFlow: 'auto'
+          overFlow: 'auto',
+          display: 'table'
         }}
         >
-          {this.renderQuestionAndAnswer()}
-          {this.renderActionButtons()}
-          {this.state.showPreviousAnswers ? this.renderAnswers() : ''}
-          {this.renderCurseModal()}
+          {this.state.finalPageVisible
+            ? (this.renderFinalPage())
+            : (
+              <React.Fragment>
+                {this.renderQuestionAndAnswer()}
+                {this.renderActionButtons()}
+                {this.state.showPreviousAnswers ? this.renderAnswers() : ''}
+                {this.renderCurseModal()}
+              </React.Fragment>
+            )
+          }
         </Paper>
       </div>
     );
