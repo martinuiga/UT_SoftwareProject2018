@@ -45,6 +45,7 @@ class ShortAnswer extends React.PureComponent {
         rows="4"
         margin="normal"
         variant="filled"
+        disabled={this.props.disabled}
         helperText={helperText}
         onChange={this.handleAnswerTextChange}
         inputProps={{ maxLength: MAXIMUM_CHARACTER_COUNT }}
@@ -56,7 +57,8 @@ class ShortAnswer extends React.PureComponent {
 
 ShortAnswer.propTypes = {
   isAnswered: PropTypes.bool,
-  changeIsAnswered: PropTypes.func.isRequired
+  changeIsAnswered: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired
 };
 
 ShortAnswer.defaultProps = {

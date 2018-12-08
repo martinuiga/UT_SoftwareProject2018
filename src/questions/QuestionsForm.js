@@ -158,6 +158,7 @@ class QuestionsForm extends React.PureComponent {
             ref={this.shortAnswerQuestion}
             question={question}
             isAnswered={this.state.isAnswered}
+            disabled={this.state.isSaved}
             changeIsAnswered={this.changeIsAnswered}
           />
         );
