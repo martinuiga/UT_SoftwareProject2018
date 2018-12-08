@@ -87,10 +87,11 @@ class QuestionsForm extends React.PureComponent {
 
   containsCurseWords = () => {
     if (this.shortAnswerQuestion.current) {
-      const answer = this.shortAnswerQuestion.current.getAnswer();
+      const answer = this.shortAnswerQuestion.current.getAnswer().toLowerCase();
       const words = answer.split(' ');
+      const wordsWithoutPunctuation = words.map(word => word.replace(/[.,/#!$%^&*;:{}=\-_`~()]/g, ''));
       const curseWords = getCurseWords();
-      const containsCurses = words.some(word => contains(word, curseWords));
+      const containsCurses = wordsWithoutPunctuation.some(word => contains(word, curseWords));
       return containsCurses;
     }
     return false;
