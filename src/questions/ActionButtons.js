@@ -54,11 +54,10 @@ class ActionButtons extends React.PureComponent {
 
   render() {
     const disableSaveButton = this.props.isShortAnswerQuestion ? false : this.props.showPreviousAnswers && !this.props.isSaved;
-    // TODO share href juurde töötav jagatav link
     return (
       <div style={buttonsStyle}>
         <FacebookProvider appId="490127188159867">
-          <Share href="http://terminoloogia.ee/paberirull/">
+          <Share href="http://terminoloogia.ee/terminirull/">
             {({ handleClick, loading }) => (
               <RaisedButton
                 style={{ marginRight: '10px' }}
