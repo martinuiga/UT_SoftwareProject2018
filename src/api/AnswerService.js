@@ -15,7 +15,7 @@ export const structurizeAnswers = (APIresponseData) => {
 };
 
 export const getAnswers = () => {
-  const URL = 'https://blog.kmu.ee/wp-json/db-json/questions';
+  const URL = 'http://terminoloogia.ee/wp-json/db-json/questions';
 
   return axios.get(URL)
     .then((response) => {
@@ -25,7 +25,7 @@ export const getAnswers = () => {
 };
 
 export const sendAnswer = (answer) => {
-  const URL = 'https://blog.kmu.ee/wp-json/db/addquestion';
+  const URL = 'http://terminoloogia.ee/wp-json/db-json/addquestion';
 
   return axios.post(URL, answer)
     .catch(err => console.log(err));
