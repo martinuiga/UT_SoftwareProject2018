@@ -12,6 +12,7 @@ const FinalPage = (props) => {
       <RaisedButton
         label="Uuesti vastama"
         onClick={() => props.answerAgain()}
+        buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
       />
     </div>
   );

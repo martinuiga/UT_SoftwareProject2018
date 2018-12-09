@@ -12,6 +12,7 @@ const WelcomePage = (props) => {
       <RaisedButton
         label="Alusta vastamist"
         onClick={() => props.startAnswering()}
+        buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
       />
     </div>
   );

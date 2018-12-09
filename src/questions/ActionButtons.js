@@ -62,6 +62,7 @@ class ActionButtons extends React.PureComponent {
             {({ handleClick, loading }) => (
               <RaisedButton
                 style={{ marginRight: '10px' }}
+                buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
                 type="button"
                 onClick={handleClick}
                 label="Jaga"
@@ -71,6 +72,7 @@ class ActionButtons extends React.PureComponent {
         </FacebookProvider>
         <RaisedButton
           style={{ marginRight: '10px' }}
+          buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
           label={this.props.showPreviousAnswers ? 'Jäta vahele' : 'Jäta vahele ja vaata vastuseid'}
           onClick={this.handleClickSkipButton}
           disabled={this.props.isSaved}
@@ -79,6 +81,7 @@ class ActionButtons extends React.PureComponent {
           label={this.props.isSaved ? 'Järgmine' : 'Vasta'}
           onClick={this.handleClickSaveButton}
           disabled={disableSaveButton}
+          buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
         />
       </div>
     );
