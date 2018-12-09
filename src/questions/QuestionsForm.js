@@ -14,6 +14,7 @@ import { getCurseWords } from '../file/FileReader';
 import CurseModal from '../modals/CurseModal';
 import MultipleSelectAnswers from '../answers/previous/MultipleSingleSelectAnswers';
 import FinalPage from './FinalPage';
+import WelcomePage from './WelcomePage';
 
 const getRandomIndex = (answers) => {
   return Math.floor(Math.random() * answers.length);
@@ -23,7 +24,7 @@ class QuestionsForm extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      currentQuestionIndex: 0,
+      currentQuestionIndex: -1,
       questions: [],
       answers: [],
       isSaved: false,
@@ -105,16 +106,17 @@ class QuestionsForm extends React.PureComponent {
       let showPreviousAnswers = false;
       let finalPageVisible = false;
 
-      // If finalPage button clicked then start with first question and hide final page
+      // If finalPage button clicked then start with welcome page and hide final page
       if (prevState.finalPageVisible === true) {
-        currentQuestionIndex = 0;
+        currentQuestionIndex = -1;
         finalPageVisible = false;
       }
 
       // If all questions have been answered then set final page visible
       if (currentQuestionIndex > prevState.questions.length - 1) {
         finalPageVisible = true;
-      } else {
+      }
+      if (currentQuestionIndex >= 0 && currentQuestionIndex <= prevState.questions.length - 1) {
         const question = prevState.questions[currentQuestionIndex];
         if (question.type === 'short-answer-question') {
           showPreviousAnswers = true;
@@ -285,6 +287,24 @@ class QuestionsForm extends React.PureComponent {
     );
   }
 
+  renderWelcomePageOrQuestions() {
+    if (this.state.currentQuestionIndex === -1) {
+      return (
+        <WelcomePage
+          startAnswering={this.changeCurrentQuestionIndex}
+        />
+      );
+    }
+    return (
+      <React.Fragment>
+        {this.renderQuestionAndAnswer()}
+        {this.renderActionButtons()}
+        {this.state.showPreviousAnswers ? this.renderAnswers() : ''}
+        {this.renderCurseModal()}
+      </React.Fragment>
+    );
+  }
+
   render() {
     return (
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -300,14 +320,7 @@ class QuestionsForm extends React.PureComponent {
         >
           {this.state.finalPageVisible
             ? (this.renderFinalPage())
-            : (
-              <React.Fragment>
-                {this.renderQuestionAndAnswer()}
-                {this.renderActionButtons()}
-                {this.state.showPreviousAnswers ? this.renderAnswers() : ''}
-                {this.renderCurseModal()}
-              </React.Fragment>
-            )
+            : (this.renderWelcomePageOrQuestions())
           }
         </Paper>
       </div>
