@@ -56,19 +56,23 @@ class ActionButtons extends React.PureComponent {
     const disableSaveButton = this.props.isShortAnswerQuestion ? false : this.props.showPreviousAnswers && !this.props.isSaved;
     return (
       <div style={buttonsStyle}>
-        <FacebookProvider appId="490127188159867">
-          <Share href="http://terminoloogia.ee/terminirull/">
-            {({ handleClick, loading }) => (
-              <RaisedButton
-                style={{ marginRight: '10px' }}
-                buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
-                type="button"
-                onClick={handleClick}
-                label="Jaga"
-              />
-            )}
-          </Share>
-        </FacebookProvider>
+        <RaisedButton
+          style={{ marginRight: '10px' }}
+          buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
+          class="fb-share-button"
+          data-href="http://terminoloogia.ee/terminirull/"
+          data-mobile-iframe="true"
+        >
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fterminoloogia.ee%2Fterminirull%2F&amp;src=sdkpreparse"
+            className="fb-xfbml-parse-ignore"
+            style={{ fontSize: '14px', textDecoration: 'none', color: 'black' }}
+          >
+            JAGA
+          </a>
+        </RaisedButton>
         <RaisedButton
           style={{ marginRight: '10px' }}
           buttonStyle={{ backgroundColor: '#f7f5e7b3' }}
