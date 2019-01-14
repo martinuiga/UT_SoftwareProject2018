@@ -11,7 +11,6 @@ const CurseModal = (props) => {
   const actions = [
     <FlatButton
       label="Selge"
-      primary
       onClick={closeModal}
     />
   ];
